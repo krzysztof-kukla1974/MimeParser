@@ -7,7 +7,16 @@ namespace EmlFileProcessor
     {
         static void Main(string[] args)
         {
-            string filePath = "/Users/krzysztof.kukla/Downloads/SampleEmails"; //args[0];
+            string filePath = "";
+            try
+            {
+                filePath = args[0]; // "/Users/krzysztof.kukla/Downloads/SampleEmails";
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Console.WriteLine("No folder path. Please try again.");
+                return;
+            }
 
             // Validate folder path
             if (string.IsNullOrWhiteSpace(filePath) || !Directory.Exists(filePath))
