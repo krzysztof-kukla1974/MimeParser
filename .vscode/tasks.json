@@ -1,0 +1,23 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "dotnet",
+			"task": "build /Users/krzysztof.kukla/Projects/MimeParser/MimeParser/MimeParser.csproj",
+			"file": "/Users/krzysztof.kukla/Projects/MimeParser/MimeParser/MimeParser.csproj",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "dotnet: build /Users/krzysztof.kukla/Projects/MimeParser/MimeParser/MimeParser.csproj"
+		},
+		{
+			"type": "dotnet",
+			"task": "clean",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"label": "dotnet: clean"
+		}
+	]
+}
