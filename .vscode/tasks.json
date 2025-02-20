@@ -1,23 +1,67 @@
 {
 	"version": "2.0.0",
 	"tasks": [
-		{
-			"type": "dotnet",
-			"task": "build /Users/krzysztof.kukla/Projects/MimeParser/MimeParser/MimeParser.csproj",
-			"file": "/Users/krzysztof.kukla/Projects/MimeParser/MimeParser/MimeParser.csproj",
-			"group": "build",
-			"problemMatcher": [],
-			"label": "dotnet: build /Users/krzysztof.kukla/Projects/MimeParser/MimeParser/MimeParser.csproj"
-		},
-		{
-			"type": "dotnet",
-			"task": "clean",
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-			"problemMatcher": [],
-			"label": "dotnet: clean"
-		}
-	]
+        {
+            "label": "Build Solution (Debug)",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/MimeParser/MimeParser.csproj",
+                "-c",
+                "Debug"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build Solution (Release)",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/MimeParser/MimeParser.csproj",
+                "-c",
+                "Release"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Clean Solution (Debug)",
+            "type": "process",
+            "command": "dotnet",
+            "args": [
+                "clean",
+                "--configuration",
+                "Debug"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Clean Solution (Release)",
+            "type": "process",
+            "command": "dotnet",
+            "args": [
+                "clean",
+                "--configuration",
+                "Release"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": []
+        }
+    ]
 }
