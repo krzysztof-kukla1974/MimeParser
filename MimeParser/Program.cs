@@ -1,78 +1,58 @@
 ﻿using MimeKit;
 using System.Text.Json;
 
-namespace EmlFileProcessor
+
+class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        string filePath = "";
+        try
         {
-            string filePath = "";
-            try
-            {
-                filePath = args[0]; // "/Users/krzysztof.kukla/Downloads/SampleEmails";
-            }
-            catch (IndexOutOfRangeException)
-            {
-                Console.WriteLine("No folder path. Please try again.");
-                return;
-            }
-
-            // Validate folder path
-            if (string.IsNullOrWhiteSpace(filePath) || !Directory.Exists(filePath))
-            {
-                Console.WriteLine("Invalid folder path. Please try again.");
-                return;
-            }
-
-            // Get all .eml files in the folder
-            string[] emlFiles = Directory.GetFiles(filePath, "*.eml");
-            if (emlFiles.Length == 0)
-            {
-                Console.WriteLine("No .eml files found in the specified folder.");
-                return;
-            }
-
-            Console.WriteLine($"Found {emlFiles.Length} .eml file(s). Processing...");
-
-            var masterJson = new
-            {
-                emails = new List<Object>()
-            };
-
-            // Process each .eml file
-            foreach (string emlFile in emlFiles)
-            {
-                try
-                {
-                    using (var stream = File.OpenRead(emlFile))
-                    {
-                        var parser = new MimeParser(stream, MimeFormat.Entity);
-                        var message = parser.ParseMessage();
-
-                        var email = new
-                        {
-                            Name = emlFile,
-                            Subject = message.Subject,
-                            From = message.From.ToString(),
-                            To = message.To.ToString(),
-                            Date = message.Date.ToString(),
-                            TextBody = message.TextBody,
-                            HtmlBody = message.HtmlBody
-                        };
-
-                        masterJson.emails.Add(email);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing file '{emlFile}': {ex.Message}");
-                }
-            }
-
-            // Completed
-            Console.WriteLine(JsonSerializer.Serialize(masterJson));
+            filePath = args[0]; // "/Users/krzysztof.kukla/Downloads/SampleEmails";
+        }
+        catch (IndexOutOfRangeException)
+        {
+            Console.WriteLine("No folder path. Please try again.");
             return;
         }
+
+        // Validate folder path
+        if (string.IsNullOrWhiteSpace(filePath) || !Directory.Exists(filePath))
+        {
+            Console.WriteLine("Invalid folder path. Please try again.");
+            return;
+        }
+
+        // Get all .eml files in the folder
+        string[] emlFiles = Directory.GetFiles(filePath, "*.eml");
+        if (emlFiles.Length == 0)
+        {
+            Console.WriteLine("No .eml files found in the specified folder.");
+            return;
+        }
+
+        Console.WriteLine($"Found {emlFiles.Length} .eml file(s). Processing...");
+
+        List<Thread> threads = new List<Thread>();
+
+        DateTime startTime = DateTime.Now;
+
+        for (int i = 0; i < 4; i++)
+        {
+            var o = new Worker("T" + (i+1), emlFiles);
+            new Thread(new ThreadStart(o.Run)).Start();
+        }
+
+        while (Worker.ThreadsInUse > 0)
+        {
+            Console.WriteLine($"Threads in use: {Worker.ThreadsInUse.ToString()}");
+            Thread.Sleep(5000);
+        }
+
+        DateTime endTime = DateTime.Now;
+        Console.WriteLine($"Duration: {endTime - startTime}");
+
+        return;
     }
 }
